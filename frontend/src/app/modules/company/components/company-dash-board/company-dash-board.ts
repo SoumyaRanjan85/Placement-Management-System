@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { Router, RouterOutlet } from '@angular/router';
+import { Router, RouterOutlet, NavigationEnd } from '@angular/router';
 import { CompanyService } from '../../services/company.service';
 import { Company } from '../../models/company.model';
 import { CommonModule } from '@angular/common';
+import { filter } from 'rxjs/operators';
 
 interface CompanyStats {
   activeJobs: number;
@@ -79,6 +80,31 @@ export class CompanyDashboardComponent implements OnInit {
     this.loadUserData();
     this.loadCompanyProfile();
     this.loadCompanyStats();
+    
+    // Track route changes to update active section
+    this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd)
+    ).subscribe((event: NavigationEnd) => {
+      this.updateActiveSectionFromUrl(event.url);
+    });
+  }
+
+  private updateActiveSectionFromUrl(url: string): void {
+    if (url.includes('/dashboard')) {
+      this.activeSection = 'dashboard';
+    } else if (url.includes('/profile')) {
+      this.activeSection = 'profile';
+    } else if (url.includes('/jobs')) {
+      this.activeSection = 'jobs';
+    } else if (url.includes('/applications')) {
+      this.activeSection = 'applications';
+    } else if (url.includes('/drives')) {
+      this.activeSection = 'drives';
+    } else if (url.includes('/analytics')) {
+      this.activeSection = 'analytics';
+    } else if (url.includes('/communication')) {
+      this.activeSection = 'communication';
+    }
   }
 
   private loadUserData(): void {
@@ -121,18 +147,18 @@ export class CompanyDashboardComponent implements OnInit {
 
   switchSection(section: string): void {
     this.activeSection = section;
-    const routes = {
+    const routes: { [key: string]: string } = {
       dashboard: '/company/dashboard',
       profile: '/company/profile',
       jobs: '/company/jobs',
       applications: '/company/applications',
-      drives: '/company/dashboard',
-      analytics: '/company/dashboard',
-      communication: '/company/dashboard'
+      drives: '/company/drives',
+      analytics: '/company/analytics',
+      communication: '/company/communication'
     };
     
-    if (routes[section as keyof typeof routes]) {
-      this.router.navigate([routes[section as keyof typeof routes]]);
+    if (routes[section]) {
+      this.router.navigate([routes[section]]);
     }
   }
 
@@ -149,11 +175,11 @@ export class CompanyDashboardComponent implements OnInit {
   }
 
   scheduleDrive(): void {
-    this.router.navigate(['/company/dashboard']);
+    this.router.navigate(['/company/drives/schedule']);
   }
 
   viewAnalytics(): void {
-    this.router.navigate(['/company/dashboard']);
+    this.router.navigate(['/company/analytics']);
   }
 
   editProfile(): void {
@@ -161,7 +187,7 @@ export class CompanyDashboardComponent implements OnInit {
   }
 
   viewNotifications(): void {
-    this.router.navigate(['/company/dashboard']);
+    this.router.navigate(['/company/communication/notifications']);
   }
 
   logout(): void {

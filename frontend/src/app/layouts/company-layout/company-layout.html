@@ -1,0 +1,88 @@
+
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+<div class="company-layout">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="logo-container">
+        <img [src]="companyProfile.logo || 'https://via.placeholder.com/80?text=Logo'" alt="Company Logo">
+      </div>
+      <h2 class="company-name">{{ companyProfile.name }}</h2>
+    </div>
+
+    <div class="company-status" [ngClass]="getStatusClass()">
+      <i class="material-icons">
+        {{ companyProfile.status === 'approved' ? 'check_circle' :
+           companyProfile.status === 'rejected' ? 'cancel' : 'schedule' }}
+      </i>
+      <span>Status: {{ companyProfile.status | titlecase }}</span>
+    </div>
+
+    <nav class="nav-menu">
+      <a class="nav-item" [class.active]="activeSection === 'dashboard'" (click)="navigateTo('dashboard')">
+        <i class="material-icons">dashboard</i>
+        <span>Dashboard</span>
+      </a>
+
+      <a class="nav-item" [class.active]="activeSection === 'profile'" (click)="navigateTo('profile')">
+        <i class="material-icons">business</i>
+        <span>Company Profile</span>
+      </a>
+
+      <a class="nav-item" [class.active]="activeSection === 'jobs'" (click)="navigateTo('jobs')">
+        <i class="material-icons">work</i>
+        <span>Job Postings</span>
+        <span class="badge" *ngIf="dashboardStats.activeJobs">{{ dashboardStats.activeJobs }}</span>
+      </a>
+
+      <a class="nav-item" [class.active]="activeSection === 'applications'" (click)="navigateTo('applications')">
+        <i class="material-icons">description</i>
+        <span>Applications</span>
+        <span class="badge" *ngIf="dashboardStats.totalApplications">{{ dashboardStats.totalApplications }}</span>
+      </a>
+
+      <a class="nav-item" [class.active]="activeSection === 'drives'" (click)="navigateTo('drives')">
+        <i class="material-icons">event</i>
+        <span>Placement Drives</span>
+        <span class="badge" *ngIf="dashboardStats.upcomingDrives">{{ dashboardStats.upcomingDrives }}</span>
+      </a>
+
+      <a class="nav-item" [class.active]="activeSection === 'analytics'" (click)="navigateTo('analytics')">
+        <i class="material-icons">analytics</i>
+        <span>Analytics</span>
+      </a>
+
+      <a class="nav-item" [class.active]="activeSection === 'communication'" (click)="navigateTo('communication')">
+        <i class="material-icons">message</i>
+        <span>Communication</span>
+        <span class="badge" *ngIf="getNotificationCount()">{{ getNotificationCount() }}</span>
+      </a>
+
+      <a class="nav-item screenshot-btn" (click)="takeScreenshot()">
+        <i class="material-icons">photo_camera</i>
+        <span>Take Screenshot</span>
+      </a>
+    </nav>
+
+    <div class="user-footer">
+      <div class="user-info">
+        <div class="avatar">
+          <i class="material-icons">person</i>
+        </div>
+        <div class="user-details">
+          <p class="user-name">{{ userName }}</p>
+          <p class="user-role">{{ userRole }}</p>
+        </div>
+      </div>
+      <button class="logout-btn" (click)="logout()" title="Logout">
+        <i class="material-icons">logout</i>
+      </button>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <router-outlet></router-outlet>
+  </main>
+</div>

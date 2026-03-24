@@ -80,96 +80,100 @@
   </aside>
 
   <main class="main-content">
-    <div class="dashboard-header">
-      <h1>Company Dashboard</h1>
-      <button class="screenshot-action-btn" (click)="takeScreenshot()">
-        <i class="material-icons">photo_camera</i>
-        Capture Dashboard
-      </button>
-    </div>
-
-    <!-- Stats Cards -->
-    <div class="stats-grid">
-      <div class="stat-card">
-        <div class="stat-icon primary">
-          <i class="material-icons">work</i>
-        </div>
-        <div class="stat-info">
-          <h3>{{ dashboardStats.activeJobs }}</h3>
-          <p>Active Jobs</p>
-        </div>
-      </div>
-
-      <div class="stat-card">
-        <div class="stat-icon success">
-          <i class="material-icons">description</i>
-        </div>
-        <div class="stat-info">
-          <h3>{{ dashboardStats.totalApplications }}</h3>
-          <p>Total Applications</p>
-        </div>
-      </div>
-
-      <div class="stat-card">
-        <div class="stat-icon warning">
-          <i class="material-icons">schedule</i>
-        </div>
-        <div class="stat-info">
-          <h3>{{ dashboardStats.pendingReviews }}</h3>
-          <p>Pending Reviews</p>
-        </div>
-      </div>
-
-      <div class="stat-card">
-        <div class="stat-icon info">
-          <i class="material-icons">event</i>
-        </div>
-        <div class="stat-info">
-          <h3>{{ dashboardStats.upcomingDrives }}</h3>
-          <p>Upcoming Drives</p>
-        </div>
-      </div>
-    </div>
-
-    <!-- Quick Actions -->
-    <div class="quick-actions">
-      <h2>Quick Actions</h2>
-      <div class="action-buttons">
-        <button class="action-btn" (click)="postJob()">
-          <i class="material-icons">add</i>
-          Post New Job
-        </button>
-        <button class="action-btn" (click)="scheduleDrive()">
-          <i class="material-icons">event_available</i>
-          Schedule Drive
-        </button>
-        <button class="action-btn" (click)="viewApplications()">
-          <i class="material-icons">list_alt</i>
-          View Applications
-        </button>
-        <button class="action-btn" (click)="viewAnalytics()">
-          <i class="material-icons">analytics</i>
-          View Analytics
+    <!-- Only show dashboard content when on dashboard route -->
+    <ng-container *ngIf="activeSection === 'dashboard'">
+      <div class="dashboard-header">
+        <h1>Company Dashboard</h1>
+        <button class="screenshot-action-btn" (click)="takeScreenshot()">
+          <i class="material-icons">photo_camera</i>
+          Capture Dashboard
         </button>
       </div>
-    </div>
 
-    <!-- Recent Activities -->
-    <div class="recent-activities">
-      <h2>Recent Activities</h2>
-      <div class="activity-list">
-        <div *ngFor="let activity of recentActivities" class="activity-item" [ngClass]="'activity-' + activity.type">
-          <div class="activity-icon">
-            <i class="material-icons">{{ activity.icon }}</i>
+      <!-- Stats Cards -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon primary">
+            <i class="material-icons">work</i>
           </div>
-          <div class="activity-content">
-            <p class="activity-message">{{ activity.message }}</p>
-            <span class="activity-time">{{ activity.time }}</span>
+          <div class="stat-info">
+            <h3>{{ dashboardStats.activeJobs }}</h3>
+            <p>Active Jobs</p>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon success">
+            <i class="material-icons">description</i>
+          </div>
+          <div class="stat-info">
+            <h3>{{ dashboardStats.totalApplications }}</h3>
+            <p>Total Applications</p>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon warning">
+            <i class="material-icons">schedule</i>
+          </div>
+          <div class="stat-info">
+            <h3>{{ dashboardStats.pendingReviews }}</h3>
+            <p>Pending Reviews</p>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon info">
+            <i class="material-icons">event</i>
+          </div>
+          <div class="stat-info">
+            <h3>{{ dashboardStats.upcomingDrives }}</h3>
+            <p>Upcoming Drives</p>
           </div>
         </div>
       </div>
-    </div>
 
+      <!-- Quick Actions -->
+      <div class="quick-actions">
+        <h2>Quick Actions</h2>
+        <div class="action-buttons">
+          <button class="action-btn" (click)="postJob()">
+            <i class="material-icons">add</i>
+            Post New Job
+          </button>
+          <button class="action-btn" (click)="scheduleDrive()">
+            <i class="material-icons">event_available</i>
+            Schedule Drive
+          </button>
+          <button class="action-btn" (click)="viewApplications()">
+            <i class="material-icons">list_alt</i>
+            View Applications
+          </button>
+          <button class="action-btn" (click)="viewAnalytics()">
+            <i class="material-icons">analytics</i>
+            View Analytics
+          </button>
+        </div>
+      </div>
+
+      <!-- Recent Activities -->
+      <div class="recent-activities">
+        <h2>Recent Activities</h2>
+        <div class="activity-list">
+          <div *ngFor="let activity of recentActivities" class="activity-item" [ngClass]="'activity-' + activity.type">
+            <div class="activity-icon">
+              <i class="material-icons">{{ activity.icon }}</i>
+            </div>
+            <div class="activity-content">
+              <p class="activity-message">{{ activity.message }}</p>
+              <span class="activity-time">{{ activity.time }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+
+    <!-- Router outlet for child routes -->
     <router-outlet></router-outlet>
   </main>
 </div>

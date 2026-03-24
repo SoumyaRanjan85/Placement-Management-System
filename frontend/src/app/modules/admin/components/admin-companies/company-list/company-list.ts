@@ -13,7 +13,7 @@ interface CompanyRecord {
 }
 
 @Component({
-  selector: 'app-company-list',
+  selector: 'app-admin-company-list',
   standalone: true,
   imports: [CommonModule, FormsModule, RouterModule],
   templateUrl: './company-list.html',

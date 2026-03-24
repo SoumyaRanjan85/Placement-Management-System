@@ -3,58 +3,58 @@
     <h2>Interview Feedback</h2>
     <p>Track and review your interview performance</p>
   </div>
-
   <!-- Feedback List -->
-  <div *ngIf="!showFeedbackForm && !selectedFeedback" class="feedback-list">
+  <div *ngIf="!showFeedbackForm && !selectedFeedback" class="feedback-list" role="region" aria-labelledby="feedbackListTitle">
     <div class="list-header">
-      <h3>My Interview Feedback</h3>
-      <button (click)="addFeedback()" class="btn-add">
+      <h3 id="feedbackListTitle">My Interview Feedback</h3>
+      <button (click)="addFeedback()" class="btn-add" aria-label="Add new interview feedback">
         + Add Feedback
       </button>
     </div>
 
-    <div *ngIf="feedbackList.length === 0" class="empty-state">
+    <div *ngIf="feedbackList.length === 0" class="empty-state" role="status" aria-live="polite">
       <p>No interview feedback recorded yet.</p>
-      <button (click)="addFeedback()" class="btn-primary">
+      <button (click)="addFeedback()" class="btn-primary" aria-label="Record your first interview feedback">
         Record Your First Feedback
       </button>
     </div>
 
-    <div *ngFor="let feedback of feedbackList" class="feedback-card">
+    <div *ngFor="let feedback of feedbackList; let i = index" class="feedback-card" role="article" [attr.aria-label]="'Feedback for ' + feedback.companyName + ' ' + feedback.jobTitle">
       <div class="feedback-header">
         <div class="company-info">
           <h4>{{ feedback.companyName }}</h4>
           <span class="job-title">{{ feedback.jobTitle }}</span>
         </div>
         <div class="feedback-meta">
-          <span class="interview-type">{{ feedback.interviewType }}</span>
-          <span class="interview-date">{{ feedback.interviewDate | date:'mediumDate' }}</span>
+          <span class="interview-type" [attr.aria-label]="'Interview type: ' + feedback.interviewType">{{ feedback.interviewType }}</span>
+          <span class="interview-date" [attr.aria-label]="'Interview date: ' + (feedback.interviewDate | date:'mediumDate')">{{ feedback.interviewDate | date:'mediumDate' }}</span>
         </div>
       </div>
 
       <div class="rating-overview">
         <div class="overall-rating">
           <span class="rating-label">Overall:</span>
-          <span class="rating-value" [style.color]="getRatingColor(feedback.overallRating)">
+          <span class="rating-value" [style.color]="getRatingColor(feedback.overallRating)" [attr.aria-label]="'Overall rating: ' + feedback.overallRating + ' out of 5'">
             {{ feedback.overallRating }}/5
           </span>
         </div>
-        <div class="detailed-ratings">
+        <div class="detailed-ratings" aria-label="Detailed ratings">
           <span *ngFor="let category of getFeedbackCategories()"
-                class="rating-pill">
+                class="rating-pill"
+                [attr.aria-label]="formatCategoryName(category) + ' rating: ' + feedback.feedback[category] + ' out of 5'">
             {{ formatCategoryName(category) }}: {{ feedback.feedback[category] }}/5
           </span>
         </div>
       </div>
 
-      <div class="feedback-actions">
-        <button (click)="viewFeedback(feedback)" class="btn-view">
+      <div class="feedback-actions" role="group" aria-label="Feedback actions">
+        <button (click)="viewFeedback(feedback)" class="btn-view" [attr.aria-label]="'View details for ' + feedback.companyName + ' interview'">
           View Details
         </button>
-        <button (click)="editFeedback(feedback)" class="btn-edit">
+        <button (click)="editFeedback(feedback)" class="btn-edit" [attr.aria-label]="'Edit feedback for ' + feedback.companyName + ' interview'">
           Edit
         </button>
-        <button (click)="deleteFeedback(feedback)" class="btn-delete">
+        <button (click)="deleteFeedback(feedback)" class="btn-delete" [attr.aria-label]="'Delete feedback for ' + feedback.companyName + ' interview'" aria-haspopup="dialog">
           Delete
         </button>
       </div>
@@ -62,64 +62,68 @@
   </div>
 
   <!-- Feedback Detail View -->
-  <div *ngIf="selectedFeedback && !showFeedbackForm" class="feedback-detail">
+  <div *ngIf="selectedFeedback && !showFeedbackForm" class="feedback-detail" role="region" aria-labelledby="detailTitle">
     <div class="detail-header">
-      <button (click)="selectedFeedback = null" class="btn-back">
+      <button (click)="selectedFeedback = null" class="btn-back" aria-label="Back to feedback list">
         ← Back to List
       </button>
-      <h3>Interview Feedback Details</h3>
+      <h3 id="detailTitle">Interview Feedback Details</h3>
     </div>
 
     <div class="detail-card">
       <div class="detail-section">
-        <h4>Interview Information</h4>
-        <div class="info-grid">
-          <div class="info-item">
-            <label>Company:</label>
-            <span>{{ selectedFeedback.companyName }}</span>
+        <h4 id="interviewInfoTitle">Interview Information</h4>
+        <div class="info-grid" role="list" aria-labelledby="interviewInfoTitle">
+          <div class="info-item" role="listitem">
+            <label id="companyNameLabel">Company:</label>
+            <span aria-labelledby="companyNameLabel">{{ selectedFeedback.companyName }}</span>
           </div>
-          <div class="info-item">
-            <label>Position:</label>
-            <span>{{ selectedFeedback.jobTitle }}</span>
+          <div class="info-item" role="listitem">
+            <label id="jobTitleLabel">Position:</label>
+            <span aria-labelledby="jobTitleLabel">{{ selectedFeedback.jobTitle }}</span>
           </div>
-          <div class="info-item">
-            <label>Interviewer:</label>
-            <span>{{ selectedFeedback.interviewer }}</span>
+          <div class="info-item" role="listitem">
+            <label id="interviewerLabel">Interviewer:</label>
+            <span aria-labelledby="interviewerLabel">{{ selectedFeedback.interviewer }}</span>
           </div>
-          <div class="info-item">
-            <label>Date:</label>
-            <span>{{ selectedFeedback.interviewDate | date:'mediumDate' }}</span>
+          <div class="info-item" role="listitem">
+            <label id="dateLabel">Date:</label>
+            <span aria-labelledby="dateLabel">{{ selectedFeedback.interviewDate | date:'mediumDate' }}</span>
           </div>
-          <div class="info-item">
-            <label>Type:</label>
-            <span>{{ selectedFeedback.interviewType }}</span>
+          <div class="info-item" role="listitem">
+            <label id="typeLabel">Type:</label>
+            <span aria-labelledby="typeLabel">{{ selectedFeedback.interviewType }}</span>
           </div>
-          <div class="info-item">
-            <label>Duration:</label>
-            <span>{{ selectedFeedback.duration }} minutes</span>
+          <div class="info-item" role="listitem">
+            <label id="durationLabel">Duration:</label>
+            <span aria-labelledby="durationLabel">{{ selectedFeedback.duration }} minutes</span>
           </div>
         </div>
       </div>
 
       <div class="detail-section">
-        <h4>Performance Ratings</h4>
-        <div class="ratings-grid">
+        <h4 id="ratingsTitle">Performance Ratings</h4>
+        <div class="ratings-grid" role="list" aria-labelledby="ratingsTitle">
           <div *ngFor="let category of getFeedbackCategories()"
-               class="rating-item">
-            <label>{{ formatCategoryName(category) }}:</label>
-            <div class="rating-bar">
+               class="rating-item" role="listitem">
+            <label [attr.id]="'ratingLabel_' + category">{{ formatCategoryName(category) }}:</label>
+            <div class="rating-bar" role="progressbar" [attr.aria-label]="formatCategoryName(category) + ' rating: ' + getCategoryRating(category) + ' out of 5'"
+                 [attr.aria-valuenow]="getCategoryRating(category)" aria-valuemin="1" aria-valuemax="5">
               <div class="rating-fill" 
                    [style.width]="(getCategoryRating(category) / 5) * 100 + '%'"
-                   [style.background]="getRatingColor(getCategoryRating(category))">
+                   [style.background]="getRatingColor(getCategoryRating(category))"
+                   [attr.aria-hidden]="true">
               </div>
               <span class="rating-text">{{ getCategoryRating(category) }}/5</span>
             </div>
           </div>
-          <div class="rating-item overall">
-            <label>Overall Rating:</label>
-            <div class="rating-bar">
+          <div class="rating-item overall" role="listitem">
+            <label id="overallRatingLabel">Overall Rating:</label>
+            <div class="rating-bar" role="progressbar" aria-labelledby="overallRatingLabel"
+                 [attr.aria-valuenow]="selectedFeedback.overallRating" aria-valuemin="1" aria-valuemax="5">
               <div class="rating-fill" [style.width]="(selectedFeedback.overallRating / 5) * 100 + '%'"
-                   [style.background]="getRatingColor(selectedFeedback.overallRating)">
+                   [style.background]="getRatingColor(selectedFeedback.overallRating)"
+                   [attr.aria-hidden]="true">
               </div>
               <span class="rating-text">{{ selectedFeedback.overallRating }}/5</span>
             </div>
@@ -128,87 +132,141 @@
       </div>
 
       <div class="detail-section">
-        <h4>Strengths</h4>
-        <ul class="strengths-list">
+        <h4 id="strengthsTitle">Strengths</h4>
+        <ul class="strengths-list" aria-labelledby="strengthsTitle">
           <li *ngFor="let strength of selectedFeedback.strengths">{{ strength }}</li>
         </ul>
       </div>
 
       <div class="detail-section">
-        <h4>Areas for Improvement</h4>
-        <ul class="improvement-list">
+        <h4 id="improvementTitle">Areas for Improvement</h4>
+        <ul class="improvement-list" aria-labelledby="improvementTitle">
           <li *ngFor="let area of selectedFeedback.areasForImprovement">{{ area }}</li>
         </ul>
       </div>
 
       <div class="detail-section">
-        <h4>Interview Questions</h4>
-        <ul class="questions-list">
+        <h4 id="questionsTitle">Interview Questions</h4>
+        <ul class="questions-list" aria-labelledby="questionsTitle">
           <li *ngFor="let question of selectedFeedback.questionsAsked">{{ question }}</li>
         </ul>
       </div>
 
       <div class="detail-section">
-        <h4>Additional Notes</h4>
-        <p class="notes">{{ selectedFeedback.notes }}</p>
+        <h4 id="notesTitle">Additional Notes</h4>
+        <p class="notes" aria-labelledby="notesTitle">{{ selectedFeedback.notes }}</p>
       </div>
 
       <div *ngIf="selectedFeedback.nextSteps" class="detail-section">
-        <h4>Next Steps</h4>
-        <p class="next-steps">{{ selectedFeedback.nextSteps }}</p>
+        <h4 id="nextStepsTitle">Next Steps</h4>
+        <p class="next-steps" aria-labelledby="nextStepsTitle">{{ selectedFeedback.nextSteps }}</p>
       </div>
     </div>
   </div>
 
   <!-- Feedback Form -->
-  <div *ngIf="showFeedbackForm" class="feedback-form">
+  <div *ngIf="showFeedbackForm" class="feedback-form" role="form" [attr.aria-label]="isEditing ? 'Edit interview feedback form' : 'Add new interview feedback form'">
     <div class="form-header">
-      <h3>{{ isEditing ? 'Edit Feedback' : 'Add Interview Feedback' }}</h3>
-      <button (click)="cancelEdit()" class="btn-cancel">Cancel</button>
+      <h3 id="formTitle">{{ isEditing ? 'Edit Feedback' : 'Add Interview Feedback' }}</h3>
+      <button (click)="cancelEdit()" class="btn-cancel" aria-label="Cancel and return to feedback list">Cancel</button>
     </div>
 
-    <form (ngSubmit)="saveFeedback()" class="form">
+    <form (ngSubmit)="saveFeedback()" #feedbackForm="ngForm" class="form" novalidate>
+      <!-- Interview Details Section -->
       <div class="form-section">
-        <h4>Interview Details</h4>
+        <h4 id="interviewDetailsTitle">Interview Details</h4>
         <div class="form-grid">
           <div class="form-group">
-            <label>Company Name *</label>
-            <input type="text" [(ngModel)]="newFeedback.companyName" name="companyName" required>
+            <label id="companyNameLabel" for="companyName">Company Name <span aria-hidden="true">*</span></label>
+            <input type="text" 
+                   id="companyName"
+                   name="companyName" 
+                   [(ngModel)]="newFeedback.companyName" 
+                   required
+                   aria-labelledby="companyNameLabel"
+                   aria-required="true"
+                   #companyName="ngModel">
+            <div *ngIf="companyName.invalid && companyName.touched" class="error-message" role="alert">
+              Company name is required
+            </div>
           </div>
+          
           <div class="form-group">
-            <label>Job Title *</label>
-            <input type="text" [(ngModel)]="newFeedback.jobTitle" name="jobTitle" required>
+            <label id="jobTitleLabel" for="jobTitle">Job Title <span aria-hidden="true">*</span></label>
+            <input type="text" 
+                   id="jobTitle"
+                   name="jobTitle" 
+                   [(ngModel)]="newFeedback.jobTitle" 
+                   required
+                   aria-labelledby="jobTitleLabel"
+                   aria-required="true"
+                   #jobTitle="ngModel">
+            <div *ngIf="jobTitle.invalid && jobTitle.touched" class="error-message" role="alert">
+              Job title is required
+            </div>
           </div>
+          
           <div class="form-group">
-            <label>Interviewer Name</label>
-            <input type="text" [(ngModel)]="newFeedback.interviewer" name="interviewer">
+            <label id="interviewerLabel" for="interviewer">Interviewer Name</label>
+            <input type="text" 
+                   id="interviewer"
+                   name="interviewer" 
+                   [(ngModel)]="newFeedback.interviewer"
+                   aria-labelledby="interviewerLabel">
           </div>
+          
           <div class="form-group">
-            <label>Interview Date</label>
-            <input type="date" [(ngModel)]="newFeedback.interviewDate" name="interviewDate">
+            <label id="interviewDateLabel" for="interviewDate">Interview Date</label>
+            <input type="date" 
+                   id="interviewDate"
+                   name="interviewDate" 
+                   [(ngModel)]="newFeedback.interviewDate"
+                   aria-labelledby="interviewDateLabel">
           </div>
+          
           <div class="form-group">
-            <label>Interview Type</label>
-            <select [(ngModel)]="newFeedback.interviewType" name="interviewType">
+            <label id="interviewTypeLabel" for="interviewType">Interview Type</label>
+            <select id="interviewType"
+                    name="interviewType"
+                    [(ngModel)]="newFeedback.interviewType"
+                    aria-labelledby="interviewTypeLabel"
+                    title="Select interview type">
               <option value="technical">Technical</option>
               <option value="hr">HR</option>
               <option value="managerial">Managerial</option>
               <option value="coding-test">Coding Test</option>
             </select>
           </div>
+          
           <div class="form-group">
-            <label>Duration (minutes)</label>
-            <input type="number" [(ngModel)]="newFeedback.duration" name="duration" min="15" max="240">
+            <label id="durationLabel" for="duration">Duration (minutes)</label>
+            <input type="number" 
+                   id="duration"
+                   name="duration" 
+                   [(ngModel)]="newFeedback.duration" 
+                   min="15" 
+                   max="240"
+                   aria-labelledby="durationLabel"
+                   title="Interview duration in minutes (15-240)">
           </div>
         </div>
       </div>
 
+      <!-- Performance Ratings Section -->
       <div class="form-section">
-        <h4>Performance Ratings (1-5)</h4>
+        <h4 id="ratingsFormTitle">Performance Ratings (1-5)</h4>
         <div class="ratings-form">
-          <div class="rating-input" *ngFor="let category of getFeedbackCategories()">
-            <label>{{ formatCategoryName(category) }}</label>
-            <select [(ngModel)]="newFeedback.feedback[category]" [name]="category">
+          <div class="rating-input" *ngFor="let category of getFeedbackCategories(); let i = index">
+            <label [attr.id]="'ratingLabel_' + category" [attr.for]="'rating_' + category">
+              {{ formatCategoryName(category) }}
+            </label>
+            <select 
+              [id]="'rating_' + category"
+              [name]="category"
+              [(ngModel)]="newFeedback.feedback[category]"
+              [attr.aria-labelledby]="'ratingLabel_' + category"
+              [title]="'Rate ' + formatCategoryName(category) + ' from 1 to 5'"
+              required>
               <option [value]="1">1 - Poor</option>
               <option [value]="2">2 - Fair</option>
               <option [value]="3">3 - Good</option>
@@ -216,9 +274,16 @@
               <option [value]="5">5 - Excellent</option>
             </select>
           </div>
+          
           <div class="rating-input">
-            <label>Overall Rating</label>
-            <select [(ngModel)]="newFeedback.overallRating" name="overallRating">
+            <label id="overallRatingFormLabel" for="overallRating">Overall Rating</label>
+            <select 
+              id="overallRating"
+              name="overallRating"
+              [(ngModel)]="newFeedback.overallRating"
+              aria-labelledby="overallRatingFormLabel"
+              title="Select overall rating from 1 to 5"
+              required>
               <option [value]="1">1 - Poor</option>
               <option [value]="2">2 - Fair</option>
               <option [value]="3">3 - Good</option>
@@ -229,60 +294,100 @@
         </div>
       </div>
 
+      <!-- Strengths Section -->
       <div class="form-section">
-        <h4>Strengths</h4>
+        <h4 id="strengthsFormTitle">Strengths</h4>
         <div class="list-input">
-          <input type="text" [(ngModel)]="newStrength" (keyup.enter)="addStrength()" placeholder="Add a strength">
-          <button type="button" (click)="addStrength()" class="btn-add-item">Add</button>
+          <input type="text" 
+                 id="newStrength"
+                 [(ngModel)]="newStrength" 
+                 (keyup.enter)="addStrength()" 
+                 placeholder="Add a strength"
+                 aria-labelledby="strengthsFormTitle"
+                 aria-describedby="strengthHelp">
+          <button type="button" (click)="addStrength()" class="btn-add-item" aria-label="Add strength">Add</button>
         </div>
-        <div class="items-list">
-          <span *ngFor="let strength of newFeedback.strengths; let i = index" class="item-tag">
+        <small id="strengthHelp" class="form-help">Press Enter or click Add to add a strength</small>
+        <div class="items-list" role="list" aria-label="List of strengths">
+          <span *ngFor="let strength of newFeedback.strengths; let i = index" class="item-tag" role="listitem">
             {{ strength }}
-            <button type="button" (click)="removeStrength(i)" class="btn-remove-item">×</button>
+            <button type="button" (click)="removeStrength(i)" class="btn-remove-item" [attr.aria-label]="'Remove strength: ' + strength">×</button>
           </span>
         </div>
       </div>
 
+      <!-- Areas for Improvement Section -->
       <div class="form-section">
-        <h4>Areas for Improvement</h4>
+        <h4 id="improvementFormTitle">Areas for Improvement</h4>
         <div class="list-input">
-          <input type="text" [(ngModel)]="newImprovement" (keyup.enter)="addImprovement()" placeholder="Add area for improvement">
-          <button type="button" (click)="addImprovement()" class="btn-add-item">Add</button>
+          <input type="text" 
+                 id="newImprovement"
+                 [(ngModel)]="newImprovement" 
+                 (keyup.enter)="addImprovement()" 
+                 placeholder="Add area for improvement"
+                 aria-labelledby="improvementFormTitle"
+                 aria-describedby="improvementHelp">
+          <button type="button" (click)="addImprovement()" class="btn-add-item" aria-label="Add area for improvement">Add</button>
         </div>
-        <div class="items-list">
-          <span *ngFor="let area of newFeedback.areasForImprovement; let i = index" class="item-tag">
+        <small id="improvementHelp" class="form-help">Press Enter or click Add to add an area for improvement</small>
+        <div class="items-list" role="list" aria-label="List of areas for improvement">
+          <span *ngFor="let area of newFeedback.areasForImprovement; let i = index" class="item-tag" role="listitem">
             {{ area }}
-            <button type="button" (click)="removeImprovement(i)" class="btn-remove-item">×</button>
+            <button type="button" (click)="removeImprovement(i)" class="btn-remove-item" [attr.aria-label]="'Remove area: ' + area">×</button>
           </span>
         </div>
       </div>
 
+      <!-- Interview Questions Section -->
       <div class="form-section">
-        <h4>Interview Questions</h4>
+        <h4 id="questionsFormTitle">Interview Questions</h4>
         <div class="list-input">
-          <input type="text" [(ngModel)]="newQuestion" (keyup.enter)="addQuestion()" placeholder="Add a question asked">
-          <button type="button" (click)="addQuestion()" class="btn-add-item">Add</button>
+          <input type="text" 
+                 id="newQuestion"
+                 [(ngModel)]="newQuestion" 
+                 (keyup.enter)="addQuestion()" 
+                 placeholder="Add a question asked"
+                 aria-labelledby="questionsFormTitle"
+                 aria-describedby="questionsHelp">
+          <button type="button" (click)="addQuestion()" class="btn-add-item" aria-label="Add interview question">Add</button>
         </div>
-        <div class="items-list">
-          <span *ngFor="let question of newFeedback.questionsAsked; let i = index" class="item-tag">
+        <small id="questionsHelp" class="form-help">Press Enter or click Add to add an interview question</small>
+        <div class="items-list" role="list" aria-label="List of interview questions">
+          <span *ngFor="let question of newFeedback.questionsAsked; let i = index" class="item-tag" role="listitem">
             {{ question }}
-            <button type="button" (click)="removeQuestion(i)" class="btn-remove-item">×</button>
+            <button type="button" (click)="removeQuestion(i)" class="btn-remove-item" [attr.aria-label]="'Remove question: ' + question">×</button>
           </span>
         </div>
       </div>
 
+      <!-- Additional Notes Section -->
       <div class="form-section">
-        <h4>Additional Notes</h4>
-        <textarea [(ngModel)]="newFeedback.notes" name="notes" rows="4" placeholder="Any additional feedback or notes..."></textarea>
+        <h4 id="notesFormTitle">Additional Notes</h4>
+        <textarea id="notes"
+                  name="notes"
+                  [(ngModel)]="newFeedback.notes"
+                  rows="4"
+                  placeholder="Any additional feedback or notes..."
+                  aria-labelledby="notesFormTitle"></textarea>
       </div>
 
+      <!-- Next Steps Section -->
       <div class="form-section">
-        <h4>Next Steps</h4>
-        <input type="text" [(ngModel)]="newFeedback.nextSteps" name="nextSteps" placeholder="Next steps or follow-up actions">
+        <h4 id="nextStepsFormTitle">Next Steps</h4>
+        <input type="text" 
+               id="nextSteps"
+               name="nextSteps"
+               [(ngModel)]="newFeedback.nextSteps"
+               placeholder="Next steps or follow-up actions"
+               aria-labelledby="nextStepsFormTitle">
       </div>
 
+      <!-- Form Actions -->
       <div class="form-actions">
-        <button type="submit" class="btn-save" [disabled]="!newFeedback.companyName || !newFeedback.jobTitle">
+        <button type="submit" 
+                class="btn-save" 
+                [disabled]="!newFeedback.companyName || !newFeedback.jobTitle"
+                [attr.aria-label]="isEditing ? 'Update feedback' : 'Save feedback'">
           {{ isEditing ? 'Update Feedback' : 'Save Feedback' }}
         </button>
       </div>
